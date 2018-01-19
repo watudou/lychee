@@ -18,5 +18,6 @@
   <modules>
     <module>lychee-web</module>
     <module>lychee-sso</module>
+    <module>lychee-common</module>
   </modules>
 </project>
