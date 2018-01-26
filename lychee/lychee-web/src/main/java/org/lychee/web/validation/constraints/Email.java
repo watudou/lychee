@@ -9,14 +9,14 @@ import java.lang.annotation.Target;
 /**
  * @author lizhixiao
  * @date: 2018年1月19日
- * @Description:必须输入正确格式的电子邮件
+ * @Description:严重是否输入正确格式的电子邮件
  */
 @Documented
 @Target({ ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Email {
 
-	String value() default "";
+	String value();
 
-	boolean required() default false;
+	boolean required() default true;
 }

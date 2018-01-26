@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * @author lizhixiao
  * @date: 2018年1月19日
- * @Description:验证日期必须是未来的日期
+ * @Description:验证日期是否未来的日期
  */
 @Documented
 @Target({ ElementType.METHOD, ElementType.PARAMETER })
@@ -17,5 +17,5 @@ import java.lang.annotation.Target;
 public @interface Future {
 	String value();
 
-	boolean required() default false;
+	boolean required() default true;
 }

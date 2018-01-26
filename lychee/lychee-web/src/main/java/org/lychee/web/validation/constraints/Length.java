@@ -9,11 +9,13 @@ import java.lang.annotation.Target;
 /**
  * @author lizhixiao
  * @date: 2018年1月19日
- * @Description: 输入长度必须介于m,n指定数字之间的字符串")(汉字算一个字符)
+ * @Description: 验证字符串输入长度或介于 m 和 n 之间的字符串(汉字算一个字符)
  */
 @Documented
 @Target({ ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Range {
+public @interface Length {
+	int[]value();
 
+	boolean required() default true;
 }
