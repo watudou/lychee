@@ -1,4 +1,4 @@
-package org.lychee.web.validation.intecepter;
+package org.lychee.web.validation.tmp;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @date: 2018年1月25日
  * @Description:参数注解校验
  */
-public class ValidateResoler implements HandlerInterceptor {
+public class ValidateInterceptor implements HandlerInterceptor {
 
 	private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private final ExecutableValidator validator = factory.getValidator().forExecutables();
