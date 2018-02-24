@@ -1,4 +1,4 @@
-package org.lychee.web.validation.tmp;
+package org.lychee.web.validation.intecepter;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,9 +14,12 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.internal.engine.ValidatorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.util.Assert;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -32,11 +35,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletRequestDataB
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
- * @author lizhixiao
- * @date: 2018年2月1日
- * @Description:TODO
+ * 添加Spring Controller 方法级别的Bean Validation的支持
+ * <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"><br/>
+ * <property name= "providerClass" value="org.hibernate.validator.HibernateValidator" /><br/>
+ * </bean>
  */
-public class ValidationInterceptorss implements HandlerInterceptor {
+public class ValidationInterceptor implements HandlerInterceptor {
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	private List<HandlerMethodArgumentResolver> argumentResolvers;
 	@Autowired
@@ -49,7 +54,7 @@ public class ValidationInterceptorss implements HandlerInterceptor {
 	private final Map<Class<?>, Set<Method>> initBinderCache = new ConcurrentHashMap<Class<?>, Set<Method>>(64);
 
 	@Autowired
-	public ValidationInterceptorss(RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
+	public ValidationInterceptor(RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
 		argumentResolvers = requestMappingHandlerAdapter.getArgumentResolvers();
 	}
 
@@ -69,7 +74,7 @@ public class ValidationInterceptorss implements HandlerInterceptor {
 			for (int i = 0; i < parameters.length; i++) {
 				MethodParameter parameter = parameters[i];
 				HandlerMethodArgumentResolver resolver = getArgumentResolver(parameter);
-				// Assert.notNull(resolver, "Unknown parameter type [" + parameter.getParameterType().getName() + "]");
+				Assert.notNull(resolver, "Unknown parameter type [" + parameter.getParameterType().getName() + "]");
 				ModelAndViewContainer mavContainer = new ModelAndViewContainer();
 				mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
 				WebDataBinderFactory webDataBinderFactory = getDataBinderFactory(method);
@@ -106,6 +111,10 @@ public class ValidationInterceptorss implements HandlerInterceptor {
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);
 		if (result == null) {
 			for (HandlerMethodArgumentResolver methodArgumentResolver : this.argumentResolvers) {
+				if (logger.isTraceEnabled()) {
+					logger.trace("Testing if argument resolver [" + methodArgumentResolver + "] supports [" +
+							parameter.getGenericParameterType() + "]");
+				}
 				if (methodArgumentResolver.supportsParameter(parameter)) {
 					result = methodArgumentResolver;
 					this.argumentResolverCache.put(parameter, result);
@@ -129,5 +138,4 @@ public class ValidationInterceptorss implements HandlerInterceptor {
 					throws Exception {
 
 	}
-
 }
