@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date: 2018年2月26日
  * @Description:验证码工具类
  */
-public class IdentifyingCodeUtil {
+public class ImageCodeUtil {
 	final static String[] key = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D",
 			"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
 			"Z" };
@@ -31,7 +31,9 @@ public class IdentifyingCodeUtil {
 
 	/**
 	 * 生成验证码字符
-	 * @param length 验证码长度
+	 * 
+	 * @param length
+	 *            验证码长度
 	 * @return 验证码
 	 */
 	private static String genCodeStr(int length) {
@@ -45,7 +47,9 @@ public class IdentifyingCodeUtil {
 
 	/**
 	 * 生成验证码图片
-	 * @param codeStr 验证码字符
+	 * 
+	 * @param codeStr
+	 *            验证码字符
 	 * @return image
 	 */
 	private static BufferedImage drawImg(String codeStr) {
@@ -176,8 +180,8 @@ public class IdentifyingCodeUtil {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setDateHeader("Expires", 0);
 		response.setContentType("image/png");
-		String codeStr = IdentifyingCodeUtil.genCodeStr(4);
-		IdentifyingCodeUtil.drawImg(codeStr);
+		String codeStr = ImageCodeUtil.genCodeStr(4);
+		ImageCodeUtil.drawImg(codeStr);
 		OutputStream os = response.getOutputStream();
 		ImageIO.write(image, "JPEG", os);
 		image.flush();
