@@ -1,23 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.lychee</groupId>
-  <artifactId>lychee</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0.0</version>
-  <name>lychee</name>
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>org.lychee</groupId>
+	<artifactId>lychee</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
+	
+	<name>lychee-web</name>
+	<url>http://maven.apache.org</url>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <modules>
-    <module>lychee-web</module>
-    <module>lychee-sso</module>
-    <module>lychee-common</module>
-  </modules>
+	<dependencies>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>4.3.2.RELEASE</version>
+		</dependency>    
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.9</version>
+		</dependency>
+		<dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>2.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.58</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>2.6</version>
+		</dependency>
+		
+	</dependencies>
 </project>
