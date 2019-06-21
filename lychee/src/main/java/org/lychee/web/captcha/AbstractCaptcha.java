@@ -1,4 +1,4 @@
-package org.lychee.web.util;
+package org.lychee.web.captcha;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date: 2018年2月26日
  * @Description:验证码工具类
  */
-public class ImageCodeUtil {
+public class AbstractCaptcha {
 	final static String[] key = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D",
 			"E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
 			"Z" };
@@ -36,7 +38,7 @@ public class ImageCodeUtil {
 	 *            验证码长度
 	 * @return 验证码
 	 */
-	private static String genCodeStr(int length) {
+	protected static String genCodeStr(int length) {
 
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < length; i++) {
@@ -52,8 +54,9 @@ public class ImageCodeUtil {
 	 *            验证码字符
 	 * @return image
 	 */
-	private static BufferedImage drawImg(String codeStr) {
-		width = 38 * codeStr.length();
+	protected static BufferedImage drawImg(String codeStr) {
+		int strLength = codeStr.length();
+		width = 152;
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
 		// 绘制背景
@@ -74,17 +77,24 @@ public class ImageCodeUtil {
 		// 定义字体样式
 		Font myFont = new Font("Consolas", Font.BOLD, 38);
 		boolean b = random.nextBoolean();
-		for (int i = 0; i < codeStr.length(); i++) {
+		for (int i = 0; i < strLength; i++) {
 			String temp = String.valueOf(codeStr.charAt(i));
 			Color color = new Color(40 + random.nextInt(80), 40 + random.nextInt(80), 40 + random.nextInt(80));
 			g.setColor(color);
 			// 旋转一定的角度
 			AffineTransform trans = new AffineTransform();
-			int rad = random.nextInt(30);
+			int rand = 30 - i * 5;
+			if (rand < i) {
+				rand = i;
+			}
+			int rad = random.nextInt(rand);
+			if (rad < 1) {
+				rad = 1;
+			}
 			if (b = !b) {
-				trans.rotate(Math.toRadians(rad), 50 * (i) + 8, 30);
+				trans.rotate(Math.toRadians(rad), 50 * (i % 5) + 8, 30);
 			} else {
-				trans.rotate(Math.toRadians(-rad), 50 * (i) + 8, 40);
+				trans.rotate(Math.toRadians(-rad), 50 * (i % 5) + 8, 40);
 			}
 			// 缩放文字
 			float scaleSize = random.nextFloat() + 0.8f;
@@ -96,7 +106,8 @@ public class ImageCodeUtil {
 			// 写文字
 			// 设置字体
 			g.setFont(myFont);
-			g.drawString(temp, 35 * i + (i == 0 ? 10 : 15), 40);
+			// g.drawString(temp, 35 * i + (i == 0 ? 10 : 15), 40);
+			g.drawString(temp, 152 / strLength * i + 2, 40);
 			strbuf.append(temp);
 		}
 		g.dispose();
@@ -175,13 +186,26 @@ public class ImageCodeUtil {
 		}
 	}
 
-	public static String genCodeStr(HttpServletResponse response) throws IOException {
+	public static String genCodeStr(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Cookie[] cookies = request.getCookies();
+		boolean hasToken = false;
+		for (Cookie cookie : cookies) {
+			if ("loginToken".equals(cookie.getName())) {
+				hasToken = true;
+			}
+		}
+		if (!hasToken) {
+			Cookie cookie = new Cookie("loginToken", "1234567890");
+			cookie.setMaxAge(3 * 60);
+			cookie.setHttpOnly(true);
+			response.addCookie(cookie);
+		}
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setDateHeader("Expires", 0);
 		response.setContentType("image/png");
-		String codeStr = ImageCodeUtil.genCodeStr(4);
-		ImageCodeUtil.drawImg(codeStr);
+		String codeStr = AbstractCaptcha.genCodeStr(9);
+		AbstractCaptcha.drawImg(codeStr);
 		OutputStream os = response.getOutputStream();
 		ImageIO.write(image, "JPEG", os);
 		image.flush();
