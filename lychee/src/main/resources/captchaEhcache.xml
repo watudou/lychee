@@ -30,6 +30,9 @@
             timeToLiveSeconds="180"
             memoryStoreEvictionPolicy="LRU"
     />
-	 <cache name="captchaCache"
-	</ehcache>
+	 <cache name="cacheCaptha"
+        maxEntriesLocalHeap="10000"
+        maxEntriesLocalDisk="10000000" 
+        diskExpiryThreadIntervalSeconds="120">
+      </cache>
 </ehcache>

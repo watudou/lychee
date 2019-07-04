@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.lychee.cache.EHCacheService;
-import org.lychee.constant.RedisConstant;
-
-import framework.SingletonFactory;
+import org.lychee.constant.LycheeConstant;
+import org.lychee.framework.SingletonFactory;
 
 public class Captcha extends AbstractCaptcha {
 
@@ -19,12 +18,12 @@ public class Captcha extends AbstractCaptcha {
 		Cookie[] cookies = request.getCookies();
 		boolean hasToken = false;
 		for (Cookie cookie : cookies) {
-			if (RedisConstant.LOGIN_TOKEN.equals(cookie.getName())) {
+			if (LycheeConstant.LOGIN_TOKEN.equals(cookie.getName())) {
 				hasToken = true;
 			}
 		}
 		if (!hasToken) {
-			Cookie cookie = new Cookie(RedisConstant.LOGIN_TOKEN, "1234567890");
+			Cookie cookie = new Cookie(LycheeConstant.LOGIN_TOKEN, "1234567890");
 			cookie.setMaxAge(3 * 60);
 			cookie.setHttpOnly(true);
 			response.addCookie(cookie);
@@ -48,16 +47,16 @@ public class Captcha extends AbstractCaptcha {
 		EHCacheService eHCacheServiceImpl = SingletonFactory.getInstance(EHCacheService.class);
 		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie : cookies) {
-			if (RedisConstant.LOGIN_TOKEN.equals(cookie.getName())) {
-				Object objValue = eHCacheServiceImpl.getCache(RedisConstant.LOGIN_TOKEN);
+			if (LycheeConstant.LOGIN_TOKEN.equals(cookie.getName())) {
+				Object objValue = eHCacheServiceImpl.get(LycheeConstant.CHACHE_CAPTHA, LycheeConstant.LOGIN_TOKEN);
 				if (null == objValue) {
 					return false;
 				}
 				boolean result = objValue.equals(captcha);
 				if (result) {
-					eHCacheServiceImpl.delCache(loginName);
+					eHCacheServiceImpl.evict(LycheeConstant.CHACHE_CAPTHA, loginName);
 				}
-				eHCacheServiceImpl.addCache(loginName, getValidateQTY(loginName) + 1);
+				eHCacheServiceImpl.put(LycheeConstant.CHACHE_CAPTHA, loginName, getValidateQTY(loginName) + 1);
 				return result;
 			}
 		}
@@ -67,7 +66,7 @@ public class Captcha extends AbstractCaptcha {
 	/** 校验次数 */
 	public static Integer getValidateQTY(String loginName) {
 		EHCacheService eHCacheServiceImpl = SingletonFactory.getInstance(EHCacheService.class);
-		Integer val = (Integer) eHCacheServiceImpl.getCache(loginName);
+		Integer val = (Integer) eHCacheServiceImpl.get(LycheeConstant.CHACHE_CAPTHA, loginName);
 		if (null == val) {
 			return 0;
 		}

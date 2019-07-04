@@ -1,4 +1,4 @@
-package framework;
+package org.lychee.framework;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;

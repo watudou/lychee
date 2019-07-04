@@ -16,7 +16,7 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @Aspect
 @Configuration
 public class TransactionAdviceConfig {
-	private static final String AOP_POINTCUT_EXPRESSION = "execution (* net.weoil.*.service..*.*(..))";
+	private static final String AOP_POINTCUT_EXPRESSION = "execution (* *..service..*.*(..))";
 
 	@Autowired
 	private PlatformTransactionManager transactionManager;
@@ -37,10 +37,12 @@ public class TransactionAdviceConfig {
 		source.addTransactionalMethod("save*", txAttrRequired);
 		source.addTransactionalMethod("delete*", txAttrRequired);
 		source.addTransactionalMethod("remove*", txAttrRequired);
+		source.addTransactionalMethod("evict*", txAttrRequired);
 		source.addTransactionalMethod("update*", txAttrRequired);
+		source.addTransactionalMethod("modify*", txAttrRequired);
 		source.addTransactionalMethod("merge*", txAttrRequired);
-		source.addTransactionalMethod("exec*", txAttrRequired);
 		source.addTransactionalMethod("set*", txAttrRequired);
+		source.addTransactionalMethod("exec*", txAttrRequired);
 
 		source.addTransactionalMethod("*", txAttrRequiredReadonly);
 		return new TransactionInterceptor(transactionManager, source);

@@ -1,33 +1,21 @@
 package org.lychee.cache;
 
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.lychee.framework.SpringContextHolder;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 
 /** escache类 */
 public class EHCacheService {
 
-	private static Cache<String, Object> cache;
-	CacheManager cacheManager;
+	private EhCacheCacheManager cacheManager;
 
 	public EHCacheService() {
-		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
-				.withCache("preConfigured",
-						CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class,
-								ResourcePoolsBuilder.heap(100))
-								.build())
-				.build(true);
-
-		cache = cacheManager.createCache("captchaCache",
-				CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class, Object.class,
-						ResourcePoolsBuilder.heap(100)).build());
-
+		this.cacheManager = SpringContextHolder.getBean(EhCacheCacheManager.class);
 	}
 
 	/** 添加缓存 */
-	public void addCache(String key, Object value) {
+	public void put(String cacheName, String key, Object value) {
+		Cache cache = cacheManager.getCache(cacheName);
 		cache.put(key, value);
 	}
 
@@ -36,7 +24,8 @@ public class EHCacheService {
 	 * 
 	 * @return
 	 */
-	public Object getCache(String key) {
+	public Object get(String cacheName, String key) {
+		Cache cache = cacheManager.getCache(cacheName);
 		return cache.get(key);
 	}
 
@@ -45,7 +34,8 @@ public class EHCacheService {
 	 * 
 	 * @return
 	 */
-	public void delCache(String key) {
-		cache.remove(key);
+	public void evict(String cacheName, String key) {
+		Cache cache = cacheManager.getCache(cacheName);
+		cache.evict(key);
 	}
 }
