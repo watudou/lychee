@@ -1,56 +1,46 @@
 package org.lychee.framework;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /** spring bean 持有类 */
 public class SpringContextHolder implements ApplicationContextAware {
 
-	private static ApplicationContext applicationContext;
+	private static ApplicationContext context;
 
 	/**
-	 * 实现ApplicationContextAware接口的context注入函数, 将其存入静态变量.
+	 * 获取 HttpServletRequest
 	 */
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		SpringContextHolder.applicationContext = applicationContext;
+	public static HttpServletRequest getHttpServletRequest() {
+		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 	}
 
 	/**
-	 * 取得存储在静态变量中的ApplicationContext.
+	 * 获取 bean,需要注入org.lychee.framework.SpringContextHolder到spring容器
 	 */
-	public static ApplicationContext getApplicationContext() {
-		checkApplicationContext();
-		return applicationContext;
-	}
-
-	/**
-	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T getBean(String name) {
-		checkApplicationContext();
-		return (T) applicationContext.getBean(name);
-	}
-
-	/**
-	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
-	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T getBean(Class<T> clazz) {
 		checkApplicationContext();
-		return (T) applicationContext.getBeansOfType(clazz);
+		return context.getBean(clazz);
 	}
 
-	/**
-	 * 清除applicationContext静态变量.
-	 */
-	public static void cleanApplicationContext() {
-		applicationContext = null;
+	public void setApplicationContext(ApplicationContext ac) throws BeansException {
+		context = ac;
+	}
+
+	public static ApplicationContext getApplicationContext() {
+		checkApplicationContext();
+		return context;
 	}
 
 	private static void checkApplicationContext() {
-		if (applicationContext == null) {
-			throw new IllegalStateException("applicaitonContext未注入,请在applicationContext.xml中定义SpringContextHolder");
+		if (context == null) {
+			throw new LycheeException("applicaitonContext未注入,请在applicationContext.xml中定义SpringContextHolder");
 		}
 	}
+
 }

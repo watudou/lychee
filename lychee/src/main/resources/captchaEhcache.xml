@@ -2,7 +2,7 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
 
-    <diskStore path="${user.dir}/cache"/>
+    <diskStore path="java.io.tmpdir"/>
     <!--
         name:缓存名称。
         maxElementsInMemory:缓存最大数目

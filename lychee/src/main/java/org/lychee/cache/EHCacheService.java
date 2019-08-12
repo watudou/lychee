@@ -7,14 +7,13 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 /** escache类 */
 public class EHCacheService {
 
-	private EhCacheCacheManager cacheManager;
-
-	public EHCacheService() {
-		this.cacheManager = SpringContextHolder.getBean(EhCacheCacheManager.class);
-	}
+	private static EhCacheCacheManager cacheManager;
 
 	/** 添加缓存 */
-	public void put(String cacheName, String key, Object value) {
+	public static void put(String cacheName, String key, Object value) {
+		if (null == cacheManager) {
+			cacheManager = SpringContextHolder.getBean(EhCacheCacheManager.class);
+		}
 		Cache cache = cacheManager.getCache(cacheName);
 		cache.put(key, value);
 	}
@@ -24,8 +23,13 @@ public class EHCacheService {
 	 * 
 	 * @return
 	 */
-	public Object get(String cacheName, String key) {
+	public static Object get(String cacheName, String key) {
+		if (null == cacheManager) {
+			cacheManager = SpringContextHolder.getBean(EhCacheCacheManager.class);
+		}
 		Cache cache = cacheManager.getCache(cacheName);
+		if (null == cache)
+			return null;
 		return cache.get(key);
 	}
 
@@ -34,7 +38,7 @@ public class EHCacheService {
 	 * 
 	 * @return
 	 */
-	public void evict(String cacheName, String key) {
+	public static void evict(String cacheName, String key) {
 		Cache cache = cacheManager.getCache(cacheName);
 		cache.evict(key);
 	}
