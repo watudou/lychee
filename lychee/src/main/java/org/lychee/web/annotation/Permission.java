@@ -7,13 +7,14 @@ import java.lang.annotation.Target;
 
 /**
  * @author lizhixiao
- * @Description:权限注解,根据code拦截
+ * @Description:权限注解,根据value拦截
  */
 
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Permission {
-	String value();
 
-	String name() default "";
+    String name() default "";
+
+    String value();
 }
