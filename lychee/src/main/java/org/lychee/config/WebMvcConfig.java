@@ -34,6 +34,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        if (!lycheeConfig.getUsePermission()) {
+            return;
+        }
         if (lycheeConfig.getUsePermission()) {
             registry.addInterceptor(loggerInterceptor()).addPathPatterns(lycheeConfig.getPermissionPath()).excludePathPatterns(lycheeConfig.getPermissionExcludePath());
         }

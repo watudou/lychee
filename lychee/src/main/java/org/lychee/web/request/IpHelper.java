@@ -21,18 +21,26 @@ import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 /**
- * <p>
  * 获取IP地址类
- * </p>
  *
- * @author hubin
- * @since 2014-5-8
+ * @author lizhixiao
+ * @date 2019-10-01
  */
 public class IpHelper {
 
     private static final Logger logger = Logger.getLogger("IpHelper");
 
     private static String LOCAL_IP_STAR_STR = "192.168.";
+
+    /**
+     * 系统的本地IP地址
+     */
+    public static final String LOCAL_IP;
+
+    /**
+     * 系统的本地服务器名
+     */
+    public static final String HOST_NAME;
 
     static {
         String ip = null;
@@ -60,15 +68,6 @@ public class IpHelper {
 
     }
 
-    /**
-     * 系统的本地IP地址
-     */
-    public static final String LOCAL_IP;
-
-    /**
-     * 系统的本地服务器名
-     */
-    public static final String HOST_NAME;
 
     /**
      * <p>

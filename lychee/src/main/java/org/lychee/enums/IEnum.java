@@ -2,7 +2,17 @@ package org.lychee.enums;
 
 public interface IEnum {
 
-	Integer key();
+    /**
+     * 枚举key
+     *
+     * @return
+     */
+    Integer key();
 
-	String value();
+    /**
+     * 枚举value
+     *
+     * @return
+     */
+    String value();
 }

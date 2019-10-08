@@ -1,23 +1,22 @@
 #荔枝框架
 
-##模块划分
-* lychee-web web辅助代码
-* lychee-sso sso登录相关代码
+##功能划分
+
+* 验证码		生成安全验证码
+* 登陆信息	管理登陆信息
+* 权限		自定义权限
 
 
-##模块职责
-* web层
 
 
 ##返回规范
 
 ```json
-	sucess : true
-	code : 000020
+	code : 0
 	msg : '成功返回'
 	body : obj
 ```
 当success为false时可显示对应code和msg，为true时显示body
 
-##开发文档
-[代码规范]()
+##安全报告
+https://hackerone.com/central-security-project/reports/new

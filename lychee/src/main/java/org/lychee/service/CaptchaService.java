@@ -2,15 +2,16 @@ package org.lychee.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.lychee.config.LycheeConfig;
+import org.lychee.constant.LycheeConstant;
 import org.lychee.web.captcha.AbstractCaptcha;
 import org.lychee.web.request.IpHelper;
+import org.lychee.web.util.CookieUtil;
 import org.lychee.web.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,8 +36,8 @@ public class CaptchaService extends AbstractCaptcha {
     /**
      * 输出验证码
      */
-    public void writeCaptcha(String token, HttpServletResponse response) throws IOException {
-        int lengh = getValidateLevel(token) + 4;
+    public void writeCaptcha() throws IOException {
+        int lengh = getValidateQty() / lycheeConfig.getCaptchaStep() + 4;
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
@@ -55,73 +56,90 @@ public class CaptchaService extends AbstractCaptcha {
     /**
      * 验证码校验级别
      */
-    public Integer getValidateLevel(String token) {
+    public Integer getValidateQty() {
         if (!lycheeConfig.getCaptchaSafe()) {
             return 0;
         }
-        String key = getCookieVal(lycheeConfig.getCaptchaCookieName());
-        if (null == key) {
-            key = IpHelper.getIpAddr(request);
+        String ip = IpHelper.getIpAddr(request);
+        Integer ipQty = (Integer) redisTemplate.opsForValue().get(LycheeConstant.KEY_CAPTCHA_CHECK + ip);
+        Integer qty = null;
+        String deviceId = request.getParameter("deviceId");
+        if (StringUtils.isNotBlank(deviceId)) {
+            qty = (Integer) redisTemplate.opsForValue().get(LycheeConstant.KEY_CAPTCHA_CHECK + deviceId);
+        } else {
+            String key = CookieUtil.getCookieVal(request, lycheeConfig.getCaptchaCookieName());
+            if (StringUtils.isNotBlank(key)) {
+                qty = (Integer) redisTemplate.opsForValue().get(LycheeConstant.KEY_CAPTCHA_CHECK + key);
+            }
+
         }
-        Integer qty = (Integer) redisTemplate.opsForValue().get(key);
         if (null == qty) {
-            return 0;
+            qty = ipQty;
+        }
+        if (null == qty) {
+            ipQty = 0;
+            qty = 0;
+        }
+        if (ipQty > 60 && qty < ipQty && qty < 10) {
+            qty = ipQty / 10 + qty;
         }
         return qty;
+    }
+
+    public Boolean incValidateQty() {
+        if (!lycheeConfig.getCaptchaSafe()) {
+            return true;
+        }
+        String keyIp = LycheeConstant.KEY_CAPTCHA_CHECK + IpHelper.getIpAddr(request);
+        redisTemplate.expire(keyIp, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
+        redisTemplate.opsForValue().increment(keyIp);
+        String deviceId = request.getParameter("deviceId");
+        if (StringUtils.isNotBlank(deviceId)) {
+            redisTemplate.opsForValue().increment(LycheeConstant.KEY_CAPTCHA_CHECK + deviceId);
+        } else {
+            deviceId = CookieUtil.getCookieVal(request, lycheeConfig.getCaptchaCookieName());
+            if (StringUtils.isNotBlank(deviceId)) {
+                redisTemplate.opsForValue().increment(LycheeConstant.KEY_CAPTCHA_CHECK + deviceId);
+            }
+        }
+        redisTemplate.expire(LycheeConstant.KEY_CAPTCHA_CHECK + deviceId, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
+        return true;
     }
 
     /**
      * 验证码校验
      */
     public Boolean validate(String captcha) {
-        String capVal = null;
+        if (lycheeConfig.getCaptchaSafe() && getValidateQty() / lycheeConfig.getCaptchaStep() == 0) {
+            return true;
+        }
+        String capCode = null;
         String deviceId = request.getParameter("deviceId");
         if (StringUtils.isNotBlank(deviceId)) {
-            capVal = (String) redisTemplate.opsForValue().get(deviceId);
+            capCode = (String) redisTemplate.opsForValue().get(LycheeConstant.KEY_CAPTHA + deviceId);
         } else {
-            capVal = getCookieVal(lycheeConfig.getCaptchaCookieName());
+            deviceId = CookieUtil.getCookieVal(request, lycheeConfig.getCaptchaCookieName());
+            capCode = (String) redisTemplate.opsForValue().get(LycheeConstant.KEY_CAPTHA + deviceId);
         }
-        if (null == capVal) {
+        if (null == capCode) {
             return null;
         }
-        return capVal.equals(captcha);
+        redisTemplate.delete(LycheeConstant.KEY_CAPTHA + deviceId);
+        return capCode.equals(captcha);
     }
 
     private void saveCaptcha(String captcha) {
         String deviceId = request.getParameter("deviceId");
         if (StringUtils.isNotBlank(deviceId)) {
-            redisTemplate.opsForValue().set(deviceId, captcha, 3, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(LycheeConstant.KEY_CAPTHA + deviceId, captcha, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
             return;
         }
-        String key = getCookieVal(lycheeConfig.getCaptchaCookieName());
+        String key = CookieUtil.getCookieVal(request, lycheeConfig.getCaptchaCookieName());
         if (null == key) {
-            key = createCookie(lycheeConfig.getCaptchaCookieName());
+            key = TokenUtil.createToken();
+            CookieUtil.createCookie(request, response, lycheeConfig.getCaptchaCookieName(), key, null, lycheeConfig.getCaptchaAge());
         }
-        redisTemplate.opsForValue().set(key, captcha, 3, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(LycheeConstant.KEY_CAPTHA + key, captcha, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
     }
 
-    private String getCookieVal(String name) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
-        for (int i = 0; i < cookies.length; i++) {
-            Cookie c = cookies[i];
-            if (c.getName().equals(name)) {
-                return c.getValue();
-            }
-        }
-        return null;
-    }
-
-    public String createCookie(String cookieName) {
-        String ip = IpHelper.getIpAddr(request);
-        String token = TokenUtil.createToken();
-        Cookie cookie = new Cookie(cookieName, token);
-        cookie.setMaxAge(lycheeConfig.getCaptchaAge());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        return token;
-    }
 }

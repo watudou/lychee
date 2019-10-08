@@ -17,7 +17,7 @@ import java.util.Random;
  * @Description:验证码工具类
  */
 public class AbstractCaptcha {
-    final static String[] key = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D",
+    final static String[] KEY = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "A", "B", "C", "D",
             "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
             "Z"};
     static Random random = new Random();
@@ -37,7 +37,7 @@ public class AbstractCaptcha {
 
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < length; i++) {
-            buffer.append(key[random.nextInt(key.length)]);
+            buffer.append(KEY[random.nextInt(KEY.length)]);
         }
         return buffer.toString();
     }
@@ -69,7 +69,7 @@ public class AbstractCaptcha {
 
         StringBuffer strbuf = new StringBuffer();
         // 定义字体样式
-        Font myFont = new Font("Consolas", Font.BOLD, 38);
+        Font myFont = new Font("Consolas", Font.BOLD, 42);
         boolean b = random.nextBoolean();
         for (int i = 0; i < strLength; i++) {
             String temp = String.valueOf(codeStr.charAt(i));
@@ -113,10 +113,12 @@ public class AbstractCaptcha {
      * 功能描述：随机颜色
      */
     private static Color getRandomColor(int fc, int bc) {
-        if (fc > 255)
+        if (fc > 255) {
             fc = 200;
-        if (bc > 255)
+        }
+        if (bc > 255) {
             bc = 255;
+        }
         int r = fc + random.nextInt(bc - fc);
         int g = fc + random.nextInt(bc - fc);
         int b = fc + random.nextInt(bc - fc);
@@ -148,7 +150,7 @@ public class AbstractCaptcha {
         int max = 5 + random.nextInt(4);
         for (int i = 0; i < max; i++) {
             g.setColor(getRandomColor(170, 220));
-            String temp = key[random.nextInt(key.length)];
+            String temp = KEY[random.nextInt(KEY.length)];
             g.drawString(temp, i * 24, random.nextInt(height));
         }
 

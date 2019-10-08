@@ -19,6 +19,8 @@ public class LycheeConfig {
      * 启用权限验证
      */
     private Boolean usePermission = false;
+    private Boolean useRedis = false;
+    private Boolean useTrasaction = false;
     /**
      * 权限拦截url
      */
@@ -46,7 +48,7 @@ public class LycheeConfig {
     /**
      * 验证码有效期（秒）
      */
-    private Integer captchaAge = 180;
+    private Integer captchaAge = 300;
     /**
      * cookie
      */
