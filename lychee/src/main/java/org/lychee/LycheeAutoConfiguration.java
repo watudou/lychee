@@ -1,9 +1,7 @@
 package org.lychee;
 
 import org.lychee.config.LycheeConfig;
-import org.lychee.config.WebMvcConfig;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({"org.lychee.service", "org.lychee.config"})
 public class LycheeAutoConfiguration {
 
-    @Bean
-    public WebMvcConfig webMvcConfig() {
-        return new WebMvcConfig();
-    }
+//    @Bean
+//    public WebMvcConfig webMvcConfig() {
+//        return new WebMvcConfig();
+//    }
 }

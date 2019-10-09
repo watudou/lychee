@@ -1,5 +1,6 @@
 package org.lychee.config;
 
+import org.apache.commons.lang.StringUtils;
 import org.lychee.web.interceptor.PermissionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public PermissionInterceptor loggerInterceptor() {
+    public PermissionInterceptor permissionInterceptor() {
         return new PermissionInterceptor();
     }
 
@@ -38,7 +39,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
             return;
         }
         if (lycheeConfig.getUsePermission()) {
-            registry.addInterceptor(loggerInterceptor()).addPathPatterns(lycheeConfig.getPermissionPath()).excludePathPatterns(lycheeConfig.getPermissionExcludePath());
+            if (StringUtils.isNotBlank(lycheeConfig.getPermissionExcludePath())) {
+                registry.addInterceptor(permissionInterceptor()).addPathPatterns(lycheeConfig.getPermissionPath()).excludePathPatterns(lycheeConfig.getPermissionExcludePath());
+            } else {
+                registry.addInterceptor(permissionInterceptor()).addPathPatterns(lycheeConfig.getPermissionPath());
+            }
         }
     }
 }
