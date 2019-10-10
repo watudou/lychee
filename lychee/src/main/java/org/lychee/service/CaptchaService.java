@@ -125,7 +125,7 @@ public class CaptchaService extends AbstractCaptcha {
             return null;
         }
         redisTemplate.delete(LycheeConstant.KEY_CAPTHA + deviceId);
-        return capCode.equals(captcha);
+        return capCode.equalsIgnoreCase(captcha);
     }
 
     private void saveCaptcha(String captcha) {
