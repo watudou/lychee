@@ -28,7 +28,7 @@ public class SupperController {
     protected String callbackSuccessData(Object data) {
         Result result = new Result();
         result.setResult(data);
-        String callback = JSON.toJSONString(new AjaxResult(LycheeConstant.RESPONSE_ERROR_CODE, null, result));
+        String callback = JSON.toJSONString(new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, result));
         return callback;
     }
 
