@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * controller公共父类
+ *
+ * @author lizhixiao
+ */
 public class SupperController {
 
     @Autowired

@@ -1,5 +1,10 @@
 package org.lychee.enums;
 
+/**
+ * enum父接口
+ *
+ * @author lizhixiao
+ */
 public interface BaseEnum {
 
     /**

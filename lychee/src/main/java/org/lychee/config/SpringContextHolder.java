@@ -1,8 +1,10 @@
-package org.lychee.framework;
+package org.lychee.config;
 
+import org.lychee.framework.LycheeException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -10,7 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * spring bean 持有类
+ *
+ * @author lizhixiao
  */
+@Component
 public class SpringContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext context;
@@ -30,19 +35,19 @@ public class SpringContextHolder implements ApplicationContextAware {
         return context.getBean(clazz);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        context = ac;
-    }
-
     public static ApplicationContext getApplicationContext() {
         checkApplicationContext();
         return context;
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext ac) throws BeansException {
+        context = ac;
+    }
+
     private static void checkApplicationContext() {
         if (context == null) {
-            throw new LycheeException("applicaitonContext未注入,请在applicationContext.xml中定义SpringContextHolder");
+            throw new LycheeException("applicaitonContext未注入,请注入SpringContextHolder");
         }
     }
 

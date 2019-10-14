@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2019/10/9
  * @Description: 短信发送父类
  */
-public abstract class SmsService {
+public abstract class BaseSmsService {
 
     @Autowired
     private LycheeConfig lycheeConfig;
@@ -43,11 +43,11 @@ public abstract class SmsService {
      */
     protected Boolean putCode(Integer type, String code) {
         String deviceId = request.getHeader("deviceId");
-        String redisCodeIPKey = lycheeConfig.getSmsCodeKey() + type + ":" + IpHelper.getIpAddr(request);
+        String redisCodeIpKey = lycheeConfig.getSmsCodeKey() + type + ":" + IpHelper.getIpAddr(request);
         String redisCodeKey = lycheeConfig.getSmsCodeKey() + type + ":" + deviceId;
         String redisIntervalKey = lycheeConfig.getSmsIntervalKey() + type + ":" + deviceId;
-        redisTemplate.opsForValue().increment(redisCodeIPKey, 1);
-        redisTemplate.opsForValue().set(redisCodeIPKey, code, lycheeConfig.getSmsSendInterval(), TimeUnit.SECONDS);
+        redisTemplate.opsForValue().increment(redisCodeIpKey, 1);
+        redisTemplate.opsForValue().set(redisCodeIpKey, code, lycheeConfig.getSmsSendInterval(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(redisIntervalKey, code, lycheeConfig.getSmsSendInterval(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(redisCodeKey, code, lycheeConfig.getSmsCodeExpiration(), TimeUnit.SECONDS);
         return true;

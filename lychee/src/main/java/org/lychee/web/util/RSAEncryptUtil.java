@@ -24,14 +24,14 @@ public class RSAEncryptUtil {
      * @throws NoSuchAlgorithmException
      */
     public static Map<String, String> genKeyPair() throws NoSuchAlgorithmException {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(1);
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         // 初始化密钥对生成器，密钥大小为96-1024位
         keyPairGen.initialize(1024, new SecureRandom());
         // 生成一个密钥对，保存在keyPair中
         KeyPair keyPair = keyPairGen.generateKeyPair();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();   // 得到私钥
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();  // 得到公钥
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         String publicKeyString = new String(Base64.encodeBase64(publicKey.getEncoded()));
         // 得到私钥字符串
         String privateKeyString = new String(Base64.encodeBase64((privateKey.getEncoded())));

@@ -4,30 +4,35 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 枚举公共类
+ *
+ * @author lizhixiao
+ */
 public class StringEnumUtil {
 
     /**
      * 获取key
      */
-    public static <T> String getKey(String value, Class<T> enumT) {
-        String key = (String) StringEnumUtil.getEnumDescriotionByValue(value, enumT, "value", "key");
+    public static <T> String getKey(String value, Class<T> enumClass) {
+        String key = (String) StringEnumUtil.getEnumDescriotionByValue(value, enumClass, "value", "key");
         return key;
     }
 
-    public static <T> String getValue(String key, Class<T> enumT) {
-        String value = (String) StringEnumUtil.getEnumDescriotionByValue(key, enumT);
+    public static <T> String getValue(String key, Class<T> enumClass) {
+        String value = (String) StringEnumUtil.getEnumDescriotionByValue(key, enumClass);
         return value;
     }
 
     /**
      * 枚举转map
      */
-    public static <T> Map<String, String> EnumToMap(Class<T> enumT) {
+    public static <T> Map<String, String> enumClassoMap(Class<T> enumClass) {
         Map<String, String> enummap = new HashMap<String, String>();
-        if (!enumT.isEnum()) {
+        if (!enumClass.isEnum()) {
             return enummap;
         }
-        T[] enums = enumT.getEnumConstants();
+        T[] enums = enumClass.getEnumConstants();
         if (enums == null || enums.length <= 0) {
             return enummap;
         }
@@ -97,17 +102,17 @@ public class StringEnumUtil {
      * 通过value值获取对应的描述信息
      *
      * @param value
-     * @param enumT
+     * @param enumClass
      * @param methodNames
      * @return enum description
      */
-    private static <T> Object getEnumDescriotionByValue(Object value, Class<T> enumT, String... methodNames) {
+    private static <T> Object getEnumDescriotionByValue(Object value, Class<T> enumClass, String... methodNames) {
         /** 不是枚举则返回"" */
-        if (!enumT.isEnum()) {
+        if (!enumClass.isEnum()) {
             return null;
         }
         /** 获取枚举的所有枚举属性，似乎这几句也没啥用，一般既然用枚举，就一定会添加枚举属性 */
-        T[] enums = enumT.getEnumConstants();
+        T[] enums = enumClass.getEnumConstants();
         if (enums == null || enums.length <= 0) {
             return null;
         }
@@ -143,15 +148,15 @@ public class StringEnumUtil {
      * 通过枚举value或者自定义值及方法获取枚举属性值
      *
      * @param value
-     * @param enumT
+     * @param enumClass
      * @param methodNames
      * @return enum key
      */
-    public static <T> String getEnumKeyByValue(Object value, Class<T> enumT, String... methodNames) {
-        if (!enumT.isEnum()) {
+    public static <T> String getEnumKeyByValue(Object value, Class<T> enumClass, String... methodNames) {
+        if (!enumClass.isEnum()) {
             return "";
         }
-        T[] enums = enumT.getEnumConstants();
+        T[] enums = enumClass.getEnumConstants();
         if (enums == null || enums.length <= 0) {
             return "";
         }

@@ -20,9 +20,11 @@ import java.util.*;
 
 /**
  * excel导入导出工具类
+ *
+ * @author lizhixiao
  */
 @Slf4j
-public abstract class ExcelService<T> {
+public abstract class BaseExcelService<T> {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     /**
@@ -47,8 +49,8 @@ public abstract class ExcelService<T> {
      * @param testClass 解析类
      * @param enumT     枚举映射类
      */
-    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumT) {
-        return excelResolve(file, testClass, enumT, 0);
+    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumClass) {
+        return excelResolve(file, testClass, enumClass, 0);
     }
 
     /**
@@ -59,7 +61,7 @@ public abstract class ExcelService<T> {
      * @param enumT     枚举映射类
      * @param roleIndex 表头索引
      */
-    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumT, Integer roleIndex) {
+    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumClass, Integer roleIndex) {
         Sheet sheet = createSheet(file);
         if (null == sheet) {
             return null;
@@ -75,7 +77,7 @@ public abstract class ExcelService<T> {
             if (row.getRowNum() == roleIndex && fieldsList.size() == 0) {
                 String simpleName = testClass.getClass().getSimpleName();
                 cellIterator.forEachRemaining(e ->
-                        fieldsList.add(StringEnumUtil.getValue(e.getStringCellValue().trim(), enumT))
+                        fieldsList.add(StringEnumUtil.getValue(e.getStringCellValue().trim(), enumClass))
                 );
                 continue;
             }
@@ -134,7 +136,7 @@ public abstract class ExcelService<T> {
             errorMsg = "文件识别错误";
             return null;
         }
-        if (!suffix.equalsIgnoreCase(".xls") && !suffix.endsWith(".xlsx")) {
+        if (!".xls".equalsIgnoreCase(suffix) && !suffix.endsWith(".xlsx")) {
             errorMsg = "文件识别错误";
             return null;
         }

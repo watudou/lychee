@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码工具类
+ *
+ * @author lizhixiao
  */
 @Service
 public class CaptchaService extends AbstractCaptcha {
@@ -80,7 +82,7 @@ public class CaptchaService extends AbstractCaptcha {
             ipQty = 0;
             qty = 0;
         }
-        if (ipQty > 60 && qty < ipQty && qty < 10) {
+        if (ipQty > lycheeConfig.getSmsMaxSendQty() && qty < ipQty && qty < 10) {
             qty = ipQty / 10 + qty;
         }
         return qty;

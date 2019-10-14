@@ -1,5 +1,10 @@
 package org.lychee.enums;
 
+/**
+ * 公共枚举接口
+ *
+ * @author lizhixiao
+ */
 public interface IEnum {
 
     /**
