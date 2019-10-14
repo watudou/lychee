@@ -73,19 +73,9 @@ public class RSAEncryptUtil {
         byte[] decoded = Base64.decodeBase64(privateKey);
         RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decoded));
         //RSA解密
-        Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+        Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, priKey);
         String outStr = new String(cipher.doFinal(inputByte));
         return outStr;
     }
-
-    public static void main(String[] args) throws Exception {
-        String str = "agUcIOUg/vTwHmnvUkWLJSpl2zqoUqrnqmXQhndPbtNmcx1aa1aVBLohIRQoF04lqU/hi0g+QXs0orgVy8t3j9oieiVTEvmZvoLMN8PhW89JmAONLXIL2Or+tQGAtJdcxxuujewqIgBlbkhZjFWcOZj2Bb/V1U4HULuDj+QKFFc=";
-        String pubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDbovKUAPo4ueOT+76iJrdGXsoCpl8BHNKdfE8mzUgbwUhYHgZPOyupiKEaops8Nx9skwTt4erfXf4+nsHnlNp4Z+X8kvhGDRoogsLD670EJ24doSZ5bdgvLa6SPlAxnTitZGzg9oe2hQH1rc5tWCte6tuGnrnUOKlsZ1042FBG2QIDAQAB";
-        String priKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANui8pQA+ji545P7vqImt0ZeygKmXwEc0p18TybNSBvBSFgeBk87K6mIoRqimzw3H2yTBO3h6t9d/j6eweeU2nhn5fyS+EYNGiiCwsPrvQQnbh2hJnlt2C8trpI+UDGdOK1kbOD2h7aFAfWtzm1YK17q24aeudQ4qWxnXTjYUEbZAgMBAAECgYBwT1qLpBRPfX6J5WkNsY52RXI2+KwL/ZkVPsOaq837o1JC/NdtHGyvPFZlMFEA8Y74DhWvLp7TqVSg4L12lf9AL4pRsJBtxTdzYULGSi1Iy6RQKdtWjk04j1QH3mhMO8wNFyaJMyW77eEEizn4vqZBcr20000Y3JP9JjgCAi5uoQJBAP4fbEYRmffNfD2mgXTKq4LLPdT91LwCLyB+iwQyajyuovUBtLnDlSTAr+LZ4Q+vWnVCAUgRerfrA/QYqytoiiMCQQDdQk6VHqn2VjOwj2Yd0UMAkkieislpJPdWu17nnP6nD5CNdVCWHuOvmiw3Irf5SlUPHt8a3/3CpaTvSWErOKTTAkEAg8s+NzTHunnqtnqVZ0H5I3NO1Rjz7LHhSSP36yxOZrxXrWO+HB2wSwhX7/n5vE3AR1H9IihWke4j9cOZeoDUKwJAJ7MRBIKW/mMjLSfdq7XzbrPQodnHH72JP5+o/KfXrUQGrMsC5ZyvP7/K9S2ekvU6Y9cnMtxD3Nv5xxGEhMvKDwJBAKQNS4mrlFFfLCOu95j+RQnfFz+gyrn4CjLZIJPh9RhaY8vGnwrV3kBoGt3lywun2ZpKy4OwK3G5wzsiNZYwBJc=";
-        String result = RSAEncryptUtil.encrypt("1111", pubKey);
-//        String result = RSAEncryptUtil.decrypt(str, priKey);
-        System.out.println(result);
-    }
-
 }

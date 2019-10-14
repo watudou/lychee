@@ -81,4 +81,8 @@ public class MD5EncryptUtil {
         return md5Hex(password + salt).equals(new String(cs1));
     }
 
+    public static void main(String[] args) {
+        String a = MD5EncryptUtil.md5Encrypt("123456");
+        System.out.println(a);
+    }
 }
