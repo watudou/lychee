@@ -93,8 +93,8 @@ public class CaptchaService extends AbstractCaptcha {
             return true;
         }
         String keyIp = LycheeConstant.KEY_CAPTCHA_CHECK + IpHelper.getIpAddr(request);
-        redisTemplate.expire(keyIp, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
         redisTemplate.opsForValue().increment(keyIp);
+        redisTemplate.expire(keyIp, lycheeConfig.getCaptchaAge(), TimeUnit.SECONDS);
         String deviceId = request.getParameter("deviceId");
         if (StringUtils.isNotBlank(deviceId)) {
             redisTemplate.opsForValue().increment(LycheeConstant.KEY_CAPTCHA_CHECK + deviceId);
