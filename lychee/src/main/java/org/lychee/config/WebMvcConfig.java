@@ -5,6 +5,7 @@ import org.lychee.web.interceptor.PermissionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @Lazy
     public PermissionInterceptor permissionInterceptor() {
         return new PermissionInterceptor();
     }

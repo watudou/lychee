@@ -3,13 +3,13 @@ package org.lychee.web.interceptor;
 import com.alibaba.fastjson.JSONObject;
 import org.lychee.config.LycheeConfig;
 import org.lychee.web.annotation.Permission;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,10 +22,10 @@ import java.util.Set;
  */
 public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
+    @Resource
     private LycheeConfig lycheeConfig;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
