@@ -19,6 +19,24 @@
     <name>lychee</name>
     <url>http://maven.apache.org</url>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>lizhixiao</name>
+            <email>lizhixiao@hotmail.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git@github.com:watudou/lychee.git</connection>
+        <developerConnection>scm:git@github.com:watudou/lychee.git</developerConnection>
+        <url>git@github.com:watudou/lychee.git</url>
+    </scm>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

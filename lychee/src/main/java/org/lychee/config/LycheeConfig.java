@@ -52,11 +52,11 @@ public class LycheeConfig {
 
     //==================短信=====================
     /**
-     * IP用户每分钟短信最大发送数量
+     * 每IP所有用户每分钟短信最大发送数量
      */
     private Integer smsMaxSendQty = 60;
     /**
-     * 用户短信最大发送数量时间限制（秒）
+     * 用户短信发送数量时间限制（秒）
      */
     private Integer smsSendInterval = 60;
     /**
