@@ -81,13 +81,13 @@ public abstract class BaseSmsService {
      */
     public Boolean sendAuth(Integer type) {
         String deviceId = request.getHeader("deviceId");
-        String redisCodeIPKey = lycheeConfig.getSmsCodeKey() + type + ":" + IpHelper.getIpAddr(request);
+        String redisCodeIpKey = lycheeConfig.getSmsCodeKey() + type + ":" + IpHelper.getIpAddr(request);
         String redisIntervalKey = lycheeConfig.getSmsIntervalKey() + type + ":" + deviceId;
         if (StringUtils.isBlank(deviceId)) {
             return null;
         }
         String interval = (String) redisTemplate.opsForValue().get(redisIntervalKey);
-        Integer qtyIp = (Integer) redisTemplate.opsForValue().get(redisCodeIPKey);
+        Integer qtyIp = (Integer) redisTemplate.opsForValue().get(redisCodeIpKey);
         if (null != interval) {
             return false;
         }

@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>org.lychee</groupId>
+    <groupId>com.github.watudou</groupId>
     <artifactId>lychee</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0</version>
@@ -25,17 +25,17 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <scm>
+        <connection>https://github.com/watudou/lychee.git</connection>
+        <developerConnection>https://github.com/watudou/</developerConnection>
+        <url>https://github.com/watudou/lychee.git</url>
+    </scm>
     <developers>
         <developer>
             <name>lizhixiao</name>
             <email>lizhixiao@hotmail.com</email>
         </developer>
     </developers>
-    <scm>
-        <connection>scm:git@github.com:watudou/lychee.git</connection>
-        <developerConnection>scm:git@github.com:watudou/lychee.git</developerConnection>
-        <url>git@github.com:watudou/lychee.git</url>
-    </scm>
 
     <dependencyManagement>
         <dependencies>
@@ -95,15 +95,84 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
-    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <configuration>
+                            <encoding>utf-8</encoding>
+                            <aggregate>true</aggregate>
+                            <charset>utf-8</charset>
+                            <docencoding>utf-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
 </project>

@@ -44,7 +44,7 @@ public class MD5EncryptUtil {
     /**
      * md5加盐
      */
-    public static String md5SaltEncrypt(String password) {
+    public static String md5SaltEncrypt(String str) {
         Random r = new Random();
         StringBuilder sb = new StringBuilder(16);
         sb.append(r.nextInt(99999999)).append(r.nextInt(99999999));
@@ -55,13 +55,13 @@ public class MD5EncryptUtil {
             }
         }
         String salt = sb.toString();
-        password = md5Hex(password + salt);
+        str = md5Hex(str + salt);
         char[] cs = new char[48];
         for (int i = 0; i < 48; i += 3) {
-            cs[i] = password.charAt(i / 3 * 2);
+            cs[i] = str.charAt(i / 3 * 2);
             char c = salt.charAt(i / 3);
             cs[i + 1] = c;
-            cs[i + 2] = password.charAt(i / 3 * 2 + 1);
+            cs[i + 2] = str.charAt(i / 3 * 2 + 1);
         }
         return new String(cs);
     }

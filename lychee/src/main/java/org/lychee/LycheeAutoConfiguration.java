@@ -15,8 +15,4 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({"org.lychee.service", "org.lychee.config"})
 public class LycheeAutoConfiguration {
 
-//    @Bean
-//    public WebMvcConfig webMvcConfig() {
-//        return new WebMvcConfig();
-//    }
 }

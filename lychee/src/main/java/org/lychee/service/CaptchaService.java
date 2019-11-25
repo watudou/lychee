@@ -8,7 +8,6 @@ import org.lychee.web.request.IpHelper;
 import org.lychee.web.util.CookieUtil;
 import org.lychee.web.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  *
  * @author lizhixiao
  */
-@Lazy
 @Service
 public class CaptchaService extends AbstractCaptcha {
 

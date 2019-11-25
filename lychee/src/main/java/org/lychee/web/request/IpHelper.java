@@ -47,7 +47,7 @@ public class IpHelper {
         String hostName = null;
         try {
             hostName = InetAddress.getLocalHost().getHostName();
-            InetAddress ipAddr[] = InetAddress.getAllByName(hostName);
+            InetAddress[] ipAddr = InetAddress.getAllByName(hostName);
             for (int i = 0; i < ipAddr.length; i++) {
                 ip = ipAddr[i].getHostAddress();
                 if (ip.startsWith(LOCAL_IP_STAR_STR)) {

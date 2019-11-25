@@ -22,6 +22,8 @@ public class SupperController {
 
     /**
      * 成功返回
+     * @param data
+     * @return josnStr
      */
     protected String callbackSuccess(Object data) {
         return JSON.toJSONString(new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, data), SerializerFeature.WriteMapNullValue);
@@ -29,6 +31,8 @@ public class SupperController {
 
     /**
      * 成功返回
+     * @param data
+     * @return data josnStr
      */
     protected String callbackSuccessData(Object data) {
         Result result = new Result();
@@ -38,6 +42,7 @@ public class SupperController {
     }
 
     /**
+     * @param msg 失败信息
      * 失败返回
      */
     protected String callbackFail(String msg) {
@@ -46,6 +51,8 @@ public class SupperController {
     }
 
     /**
+     *  @param code 失败信息code
+     *  @param msg 失败信息
      * 失败返回,指定code
      */
     protected String callbackFail(Integer code, String msg) {

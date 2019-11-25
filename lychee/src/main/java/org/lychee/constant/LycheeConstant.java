@@ -1,5 +1,8 @@
 package org.lychee.constant;
 
+/**
+ * @author lizhixao
+ */
 public class LycheeConstant {
 
     /**

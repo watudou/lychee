@@ -55,7 +55,6 @@ public class AbstractCaptcha {
         Graphics2D g = image.createGraphics();
         // 绘制背景
         // g.setColor(getRandomColor(200, 250));
-        // 透明度设置
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
         g.fillRect(0, 0, width, height);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
@@ -100,7 +99,6 @@ public class AbstractCaptcha {
             // 写文字
             // 设置字体
             g.setFont(myFont);
-            // g.drawString(temp, 35 * i + (i == 0 ? 10 : 15), 40);
             g.drawString(temp, 152 / strLength * i + 2, 40);
             strbuf.append(temp);
         }
