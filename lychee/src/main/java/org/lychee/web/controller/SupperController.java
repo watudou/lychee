@@ -2,6 +2,7 @@ package org.lychee.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import lombok.extern.slf4j.Slf4j;
 import org.lychee.constant.LycheeConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 
