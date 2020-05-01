@@ -1,20 +1,17 @@
 package org.lychee.web.controller;
 
+import lombok.Data;
+
 /**
  * 返回单个参数
  *
  * @author lizhixiao
  */
-public class Result {
+@Data
+public class Result<T> {
 
-    private Object result;
-
-    public Object getResult() {
-        return result;
-    }
-
-    public void setResult(Object result) {
-        this.result = result;
-    }
-
+    /**
+     * 返回结果
+     */
+    private T result;
 }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author lizhixiao
  */
-@Component
+@Component("lySpringContextHolder")
 public class SpringContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext context;

@@ -1,6 +1,6 @@
 package org.lychee.service;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.lychee.config.LycheeConfig;
 import org.lychee.web.request.IpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
