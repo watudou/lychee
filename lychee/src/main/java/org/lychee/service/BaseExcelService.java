@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -30,11 +30,11 @@ public abstract class BaseExcelService<T> {
     /**
      * 限制EXCEL最大行数
      */
-    private static final int MAX_LINE = 2000;
+    private static final int MAX_LINE = 5000;
     /**
      * 限制EXCEL最大列数
      */
-    private static final int MAX_ROW = 100;
+    private static final int MAX_ROW = 500;
     /**
      * 错误模版
      */
@@ -43,39 +43,41 @@ public abstract class BaseExcelService<T> {
     private String errorMsg;
 
     /**
-     * 导入
+     * excel解析
      *
-     * @param file      excel文件
-     * @param testClass 解析类
-     * @param enumT     枚举映射类
+     * @param file        文件
+     * @param targetClass 目标类
+     * @param enumClass   枚举映射类
+     * @return list
      */
-    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumClass) {
-        return excelResolve(file, testClass, enumClass, 0);
+    protected List<T> excelResolve(MultipartFile file, Object targetClass, Class enumClass) {
+        return excelResolve(file, targetClass, enumClass, 0);
     }
 
     /**
-     * 导入
+     * excel解析
      *
-     * @param file      excel文件
-     * @param testClass 解析类
-     * @param enumT     枚举映射类
-     * @param roleIndex 表头索引
+     * @param file        文件
+     * @param targetClass 目标类
+     * @param enumClass   枚举映射类
+     * @param rowIndex    起始行
+     * @return
      */
-    protected List<T> excelResolve(MultipartFile file, Object testClass, Class enumClass, Integer roleIndex) {
+    protected List<T> excelResolve(MultipartFile file, Object targetClass, Class enumClass, Integer rowIndex) {
         Sheet sheet = createSheet(file);
         if (null == sheet) {
             return null;
         }
-        Field[] declaredFields = testClass.getClass().getDeclaredFields();
+        Field[] declaredFields = targetClass.getClass().getDeclaredFields();
         List<String> fieldsList = Collections.synchronizedList(new ArrayList<>());
         List<T> objectsList = Collections.synchronizedList(new ArrayList<T>());
         for (Row row : sheet) {
-            if (row.getRowNum() < roleIndex) {
+            if (row.getRowNum() < rowIndex) {
                 continue;
             }
             Iterator<Cell> cellIterator = row.cellIterator();
-            if (row.getRowNum() == roleIndex && fieldsList.size() == 0) {
-                String simpleName = testClass.getClass().getSimpleName();
+            if (row.getRowNum() == rowIndex && fieldsList.size() == 0) {
+                String simpleName = targetClass.getClass().getSimpleName();
                 cellIterator.forEachRemaining(e ->
                         fieldsList.add(StringEnumUtil.getValue(e.getStringCellValue().trim(), enumClass))
                 );
@@ -84,7 +86,7 @@ public abstract class BaseExcelService<T> {
             for (; cellIterator.hasNext(); ) {
                 Object obj = null;
                 try {
-                    obj = testClass.getClass().newInstance();
+                    obj = targetClass.getClass().newInstance();
                 } catch (InstantiationException | IllegalAccessException e) {
                     errorMsg = "对象创建创建错误";
                     return null;
@@ -127,17 +129,17 @@ public abstract class BaseExcelService<T> {
      */
     private String fileVerify(MultipartFile file) {
         if (null == file) {
-            errorMsg = "文件识别错误";
+            errorMsg = "文件格式识别错误";
             return null;
         }
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String filename = file.getOriginalFilename();
         if (StringUtils.isBlank(filename)) {
-            errorMsg = "文件识别错误";
+            errorMsg = "文件类型识别错误";
             return null;
         }
         if (!".xls".equalsIgnoreCase(suffix) && !suffix.endsWith(".xlsx")) {
-            errorMsg = "文件识别错误";
+            errorMsg = "文件类型识别错误";
             return null;
         }
         return suffix;

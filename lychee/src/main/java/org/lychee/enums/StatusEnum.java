@@ -24,12 +24,12 @@ public enum StatusEnum implements IEnum {
     }
 
     @Override
-    public Integer key() {
+    public Integer getKey() {
         return key;
     }
 
     @Override
-    public String value() {
+    public String getValue() {
         return value;
     }
 

@@ -41,7 +41,7 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
         }
-        String appType = request.getHeader("device");
+        String appType = request.getHeader("appType");
         String userId = request.getParameter("cUserId");
         String key = lycheeConfig.getPermissionKey();
         if (null != appType) {
@@ -68,8 +68,8 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
     private boolean reject(HttpServletResponse response) throws IOException {
         JSONObject obj = new JSONObject();
         obj.put("code", HttpStatus.FORBIDDEN.value());
-        obj.put("msg", "Forbidden");
-        response.getWriter().write(obj.toJSONString());
+        obj.put("msg", HttpStatus.FORBIDDEN.getReasonPhrase());
+        response.getWriter().write(obj.toString());
         return false;
     }
 }

@@ -12,12 +12,12 @@ public interface IEnum {
      *
      * @return
      */
-    Integer key();
+    Integer getKey();
 
     /**
      * 枚举value
      *
      * @return
      */
-    String value();
+    String getValue();
 }
