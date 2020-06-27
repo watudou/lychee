@@ -1,4 +1,4 @@
-package org.lychee.web.util;
+package org.lychee.util;
 
 import org.apache.commons.codec.binary.Base64;
 

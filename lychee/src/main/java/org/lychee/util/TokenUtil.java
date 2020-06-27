@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011-2014, hata (hatamail@qq.com).
  */
-package org.lychee.web.util;
+package org.lychee.util;
 
 
 import java.util.UUID;

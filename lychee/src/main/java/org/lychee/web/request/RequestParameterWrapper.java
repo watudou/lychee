@@ -1,66 +1,71 @@
 package org.lychee.web.request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * 请数添加自定义参数
+ *
  * @author lizhixiao
- * @date: 2018年2月9日
- * @Description:解析request头 json参数还原原始类型
  */
 public class RequestParameterWrapper extends HttpServletRequestWrapper {
 
-	private Map<String, String[]> params = new HashMap<String, String[]>();
+    private Map<String, String[]> params = new HashMap<String, String[]>();
 
-	public RequestParameterWrapper(HttpServletRequest request) {
-		super(request);
-		// 将现有parameter传递给params
-		this.params.putAll(request.getParameterMap());
-	}
+    @SuppressWarnings("unchecked")
+    public RequestParameterWrapper(HttpServletRequest request) {
+        // 将request交给父类，以便于调用对应方法的时候，将其输出，其实父亲类的实现方式和第一种new的方式类似
+        super(request);
+        //将参数表，赋予给当前的Map以便于持有request中的参数
+        this.params.putAll(request.getParameterMap());
+    }
 
-	// 重载构造函数
-	public RequestParameterWrapper(HttpServletRequest request, Map<String, Object> extraParams) {
-		super(request);
-		addParameters(extraParams);
-	}
+    /**
+     * 重载一个构造方法
+     */
+    public RequestParameterWrapper(HttpServletRequest request, Map<String, Object> extendParams) {
+        this(request);
+        addAllParameters(extendParams);
+    }
 
-	// 添加额外参数
-	public void addParameters(Map<String, Object> extraParams) {
-		for (Map.Entry<String, Object> entry : extraParams.entrySet()) {
-			addParameter(entry.getKey(), entry.getValue());
-		}
-	}
+    @Override
+    public String getParameter(String name) {//重写getParameter，代表参数从当前类中的map获取
+        String[] values = params.get(name);
+        if (values == null || values.length == 0) {
+            return null;
+        }
+        return values[0];
+    }
 
-	public void addParameter(String name, Object value) {
-		if (value != null) {
-			if (value instanceof String[]) {
-				params.put(name, (String[]) value);
-			} else if (value instanceof String) {
-				params.put(name, new String[] { (String) value });
-			} else {
-				params.put(name, new String[] { String.valueOf(value) });
-			}
-		}
-	}
+    @Override
+    public String[] getParameterValues(String name) {//同上
+        return params.get(name);
+    }
 
-	public void parseJson(HttpServletRequest request) {
-		// String requestMsg = getRequestMsg(request);
-		// JSONObject requestJSON = JSONObject.parseObject(requestMsg);
+    public void addAllParameters(Map<String, Object> otherParams) {//增加多个参数
+        for (Map.Entry<String, Object> entry : otherParams.entrySet()) {
+            addParameter(entry.getKey(), entry.getValue());
+        }
+    }
 
-	}
 
-	public String getRequestMsg(HttpServletRequest request) throws IOException {
-		BufferedReader reader = request.getReader();
-		String tempStr = null;
-		StringBuffer sb = new StringBuffer();
-		while ((tempStr = reader.readLine()) != null) {
-			sb.append(tempStr);
-		}
-		return sb.toString();
-	}
+    public void addParameter(String name, Object value) {//增加参数
+        if (value != null) {
+            if (value instanceof ArrayList) {
+                String value1 = String.valueOf(value).substring(1, String.valueOf(value).length());
+                value = value1.substring(0, value1.length() - 1);
+                params.put(name, new String[]{(String) value});
+            } else if (value instanceof String[]) {
+                params.put(name, (String[]) value);
+            } else if (value instanceof String) {
+                params.put(name, new String[]{(String) value});
+            } else {
+                params.put(name, new String[]{String.valueOf(value)});
+            }
+        }
+    }
 }

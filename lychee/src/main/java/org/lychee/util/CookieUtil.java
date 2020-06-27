@@ -1,4 +1,4 @@
-package org.lychee.web.util;
+package org.lychee.util;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

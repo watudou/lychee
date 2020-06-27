@@ -1,4 +1,4 @@
-package org.lychee.web.util;
+package org.lychee.util;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

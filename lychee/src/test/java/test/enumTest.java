@@ -4,7 +4,7 @@
 package test;
 
 import org.lychee.enums.StatusEnum;
-import org.lychee.web.util.EnumUtil;
+import org.lychee.util.EnumUtil;
 
 import java.util.Map;
 
