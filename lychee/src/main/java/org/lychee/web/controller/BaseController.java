@@ -18,6 +18,13 @@ public class BaseController<T> {
     }
 
     /**
+     * 成功返回,指定code
+     */
+    protected AjaxResult<T> callbackSuccess(Integer code, T data) {
+        return new AjaxResult(code, null, data);
+    }
+
+    /**
      * 成功返回
      */
     protected AjaxResult<T> callbackSuccessData(T data) {
