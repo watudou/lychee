@@ -26,13 +26,12 @@ public abstract class BaseSmsService {
     /**
      * 发送短信
      *
-     * @param templateCode
      * @param type
      * @param mobile
      * @param param
      * @return
      */
-    public abstract Boolean send(String templateCode, Integer type, String mobile, String param);
+    public abstract Boolean send(Integer type, String mobile, String param);
 
     /**
      * 存储验证码
