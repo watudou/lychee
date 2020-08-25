@@ -11,11 +11,14 @@ import java.util.Map;
  */
 public class EnumUtil {
 
+    private static final String keyMethod = "getKey";
+    private static final String valueMethod = "getValue";
+
     /**
      * 获取key
      */
     public static <T> Integer getKey(String value, Class<T> enumClass) {
-        Integer key = (Integer) EnumUtil.getEnumDescriotionByValue(value, enumClass, "value", "key");
+        Integer key = (Integer) EnumUtil.getEnumDescriotionByValue(value, enumClass, valueMethod, keyMethod);
         return key;
     }
 
@@ -37,14 +40,14 @@ public class EnumUtil {
             return enummap;
         }
         /** 默认接口value方法 */
-        String valueMathod = "key";
+        String valueMathod = "getKey";
         /** 默认接口getValue方法 */
-        String desMathod = "value";
+        String desMathod = "getValue";
         for (int i = 0, len = enums.length; i < len; i++) {
             T tobj = enums[i];
             /** 获取key值 */
-            Integer resultValue = (Integer) getMethodValue(valueMathod, tobj);
-            if (null == resultValue) {
+            Integer resultKey = (Integer) getMethodValue(valueMathod, tobj);
+            if (null == resultKey) {
                 continue;
             }
             /** 获取getDesc描述值 */
@@ -53,7 +56,7 @@ public class EnumUtil {
             if (null == resultDes) {
                 resultDes = null;
             }
-            enummap.put(resultValue, resultDes);
+            enummap.put(resultKey, resultDes);
         }
         return enummap;
 
@@ -68,7 +71,7 @@ public class EnumUtil {
      * @return return value
      */
     private static <T> Object getMethodValue(String methodName, T obj, Object... args) {
-        Object resut = "";
+        Object resut = null;
         try {
             /** 获取方法数组，这里只要共有的方法 */
             Method[] methods = obj.getClass().getMethods();
@@ -118,9 +121,9 @@ public class EnumUtil {
         }
         int count = methodNames.length;
         /** 默认获取枚举value方法，与接口方法一致 */
-        String valueMathod = "key";
+        String valueMathod = "getKey";
         /** 默认获取枚举getDesc方法 */
-        String desMathod = "value";
+        String desMathod = "getValue";
         if (count >= 1 && !"".equals(methodNames[0])) {
             valueMathod = methodNames[0];
         }
@@ -144,42 +147,5 @@ public class EnumUtil {
         return "";
     }
 
-    /**
-     * 通过枚举value或者自定义值及方法获取枚举属性值
-     *
-     * @param value
-     * @param enumClass
-     * @param methodNames
-     * @return enum key
-     */
-    public static <T> String getEnumKeyByValue(Object value, Class<T> enumClass, String... methodNames) {
-        if (!enumClass.isEnum()) {
-            return "";
-        }
-        T[] enums = enumClass.getEnumConstants();
-        if (enums == null || enums.length <= 0) {
-            return "";
-        }
-        int count = methodNames.length;
-        /** 默认方法 */
-        String valueMathod = "key";
-        /** 独立方法 */
-        if (count >= 1 && !"".equals(methodNames[0])) {
-            valueMathod = methodNames[0];
-        }
-        for (int i = 0, len = enums.length; i < len; i++) {
-            T tobj = enums[i];
-            try {
-                Object resultValue = getMethodValue(valueMathod, tobj);
-                /** 存在则返回对应值 */
-                if (resultValue != null && resultValue.toString().equals(value + "")) {
-                    return tobj + "";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
 
 }

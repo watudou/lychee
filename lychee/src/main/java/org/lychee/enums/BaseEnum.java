@@ -1,18 +1,25 @@
 package org.lychee.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 公共枚举接口
  *
  * @author lizhixiao
  */
-public interface IEnum {
+public interface BaseEnum {
+
+    static Map hello() {
+        return new HashMap();
+    }
 
     /**
      * 枚举key
      *
      * @return
      */
-    Integer getKey();
+    String getKey();
 
     /**
      * 枚举value
