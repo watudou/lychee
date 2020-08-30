@@ -71,7 +71,11 @@ public class FileUtil {
         FileInfo info = new FileInfo();
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String relativePath = getFileRelativePath(suffix);
-        info.setName(file.getOriginalFilename());
+        String name = file.getOriginalFilename();
+        if (name.length() > 25) {
+            name = file.getOriginalFilename().substring(0, 20) + "...";
+        }
+        info.setName(name);
         info.setUrl(uploadDomain + relativePath);
         info.setSuffix(suffix);
         info.setSize(file.getSize());

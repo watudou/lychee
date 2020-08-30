@@ -1,7 +1,7 @@
 package org.lychee.util;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -29,19 +29,19 @@ public class StringEnumUtil {
      * 枚举转map
      */
     public static <T> Map<String, String> enumToMap(Class<T> enumClass) {
-        Map<String, String> enummap = new HashMap<>();
+        Map<String, String> enumMap = new LinkedHashMap<>();
         if (!enumClass.isEnum()) {
-            return enummap;
+            return enumMap;
         }
         T[] enums = enumClass.getEnumConstants();
         if (enums == null || enums.length <= 0) {
-            return enummap;
+            return enumMap;
         }
         for (int i = 0, len = enums.length; i < len; i++) {
             T tobj = enums[i];
-            enummap.put(getMethodValue(keyMethod, tobj), getMethodValue(valueMethod, tobj));
+            enumMap.put(getMethodValue(keyMethod, tobj), getMethodValue(valueMethod, tobj));
         }
-        return enummap;
+        return enumMap;
 
     }
 

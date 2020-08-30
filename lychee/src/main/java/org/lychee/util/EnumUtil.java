@@ -1,7 +1,7 @@
 package org.lychee.util;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -18,47 +18,32 @@ public class EnumUtil {
      * 获取key
      */
     public static <T> Integer getKey(String value, Class<T> enumClass) {
-        Integer key = (Integer) EnumUtil.getEnumDescriotionByValue(value, enumClass, valueMethod, keyMethod);
+        Integer key = (Integer) EnumUtil.getEnumKeyValue(value, enumClass, valueMethod, keyMethod);
         return key;
     }
 
     public static <T> String getValue(Integer key, Class<T> enumClass) {
-        String value = (String) EnumUtil.getEnumDescriotionByValue(key, enumClass);
+        String value = (String) EnumUtil.getEnumKeyValue(key, enumClass);
         return value;
     }
 
     /**
      * 枚举转map
      */
-    public static <T> Map<Integer, String> enumClassoMap(Class<T> enumClass) {
-        Map<Integer, String> enummap = new HashMap<Integer, String>();
+    public static <T> Map<Integer, String> enumToMap(Class<T> enumClass) {
+        Map<Integer, String> enumMap = new LinkedHashMap<>();
         if (!enumClass.isEnum()) {
-            return enummap;
+            return enumMap;
         }
         T[] enums = enumClass.getEnumConstants();
         if (enums == null || enums.length <= 0) {
-            return enummap;
+            return enumMap;
         }
-        /** 默认接口value方法 */
-        String valueMathod = "getKey";
-        /** 默认接口getValue方法 */
-        String desMathod = "getValue";
         for (int i = 0, len = enums.length; i < len; i++) {
             T tobj = enums[i];
-            /** 获取key值 */
-            Integer resultKey = (Integer) getMethodValue(valueMathod, tobj);
-            if (null == resultKey) {
-                continue;
-            }
-            /** 获取getDesc描述值 */
-            String resultDes = (String) getMethodValue(desMathod, tobj);
-            /** 如果描述不存在获取属性值 */
-            if (null == resultDes) {
-                resultDes = null;
-            }
-            enummap.put(resultKey, resultDes);
+            enumMap.put((Integer) getMethodValue(keyMethod, tobj), (String) getMethodValue(valueMethod, tobj));
         }
-        return enummap;
+        return enumMap;
 
     }
 
@@ -71,34 +56,29 @@ public class EnumUtil {
      * @return return value
      */
     private static <T> Object getMethodValue(String methodName, T obj, Object... args) {
-        Object resut = null;
         try {
             /** 获取方法数组，这里只要共有的方法 */
             Method[] methods = obj.getClass().getMethods();
             if (methods.length <= 0) {
-                return resut;
+                return null;
             }
             Method method = null;
             for (int i = 0, len = methods.length; i < len; i++) {
                 /** 忽略大小写取方法 */
                 if (methods[i].getName().equalsIgnoreCase(methodName)) {
                     /** 如果存在，则取出正确的方法名称 */
-                    methodName = methods[i].getName();
                     method = methods[i];
                     break;
                 }
             }
             if (method == null) {
-                return resut;
+                return null;
             }
-            /** 方法执行 */
-            resut = method.invoke(obj, args);
-            /** 返回结果 */
-            return resut;
+            return method.invoke(obj, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return resut;
+        return null;
     }
 
     /**
@@ -109,7 +89,7 @@ public class EnumUtil {
      * @param methodNames
      * @return enum description
      */
-    private static <T> Object getEnumDescriotionByValue(Object value, Class<T> enumClass, String... methodNames) {
+    private static <T> Object getEnumKeyValue(Object value, Class<T> enumClass, String... methodNames) {
         /** 不是枚举则返回"" */
         if (!enumClass.isEnum()) {
             return null;
@@ -119,32 +99,19 @@ public class EnumUtil {
         if (enums == null || enums.length <= 0) {
             return null;
         }
-        int count = methodNames.length;
-        /** 默认获取枚举value方法，与接口方法一致 */
-        String valueMathod = "getKey";
-        /** 默认获取枚举getDesc方法 */
-        String desMathod = "getValue";
-        if (count >= 1 && !"".equals(methodNames[0])) {
-            valueMathod = methodNames[0];
-        }
-        if (count == 2 && !"".equals(methodNames[1])) {
-            desMathod = methodNames[1];
-        }
         for (int i = 0, len = enums.length; i < len; i++) {
             T t = enums[i];
             try {
-                /** 获取枚举对象value */
-                Object resultValue = getMethodValue(valueMathod, t);
-                if (resultValue.toString().equals(value + "")) {
+                Object resultValue = getMethodValue(keyMethod, t);
+                if (resultValue.equals(value)) {
                     /** 存在则返回对应描述 */
-                    Object resultDes = getMethodValue(desMathod, t);
-                    return resultDes;
+                    return getMethodValue(valueMethod, t);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return "";
+        return null;
     }
 
 

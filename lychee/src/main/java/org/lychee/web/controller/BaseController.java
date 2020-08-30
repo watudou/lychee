@@ -1,12 +1,14 @@
 package org.lychee.web.controller;
 
 import org.lychee.constant.LycheeConstant;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * controller公共父类
  *
  * @author lizhixiao
  */
+@Validated
 public class BaseController<T> {
 
 
