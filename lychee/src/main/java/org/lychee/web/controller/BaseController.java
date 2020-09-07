@@ -1,6 +1,6 @@
 package org.lychee.web.controller;
 
-import org.lychee.constant.LycheeConstant;
+import org.lychee.enums.ResponseCodeEnum;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -16,7 +16,7 @@ public class BaseController<T> {
      * 成功返回
      */
     protected AjaxResult<T> callbackSuccess(T data) {
-        return new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, data);
+        return new AjaxResult(ResponseCodeEnum.SUCCESS.getKey(), null, data);
     }
 
     /**
@@ -32,14 +32,14 @@ public class BaseController<T> {
     protected AjaxResult<T> callbackSuccessData(T data) {
         Result result = new Result();
         result.setResult(data);
-        return new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, result);
+        return new AjaxResult(ResponseCodeEnum.SUCCESS.getKey(), null, result);
     }
 
     /**
      * 失败返回
      */
     protected AjaxResult<T> callbackFail(String msg) {
-        return new AjaxResult(LycheeConstant.RESPONSE_ERROR_CODE, msg, null);
+        return new AjaxResult(ResponseCodeEnum.ERROR.getKey(), msg, null);
     }
 
     /**
