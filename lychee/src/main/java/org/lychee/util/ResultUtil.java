@@ -1,7 +1,7 @@
 package org.lychee.util;
 
 import com.alibaba.fastjson.JSON;
-import org.lychee.constant.LycheeConstant;
+import org.lychee.enums.ResponseCodeEnum;
 import org.lychee.web.controller.AjaxResult;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +34,7 @@ public class ResultUtil {
      * 成功返回
      */
     public static void resultSuccess(HttpServletResponse servletResponse, Object data) {
-        responseJson(servletResponse, new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, data));
+        responseJson(servletResponse, new AjaxResult(ResponseCodeEnum.SUCCESS.getKey(), null, data));
     }
 
 
@@ -42,7 +42,7 @@ public class ResultUtil {
      * 失败返回
      */
     public static void resultFail(HttpServletResponse servletResponse, String msg) {
-        responseJson(servletResponse, new AjaxResult(LycheeConstant.RESPONSE_ERROR_CODE, msg, null));
+        responseJson(servletResponse, new AjaxResult(ResponseCodeEnum.ERROR.getKey(), msg, null));
     }
 
     /**
