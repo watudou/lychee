@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.lychee.constant.LycheeConstant;
+import org.lychee.enums.ResponseCodeEnum;
 import org.lychee.util.StringEnumUtil;
 import org.lychee.web.controller.AjaxResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -149,7 +149,7 @@ public interface IExcelService<T> {
     default AjaxResult<List<T>> excelResolve(MultipartFile file, Class targetClass, Class enumClass) {
         Sheet sheet = createSheet(file);
         if (null == sheet) {
-            return new AjaxResult(LycheeConstant.RESPONSE_ERROR_CODE, "文件创建错误", null);
+            return new AjaxResult(ResponseCodeEnum.ERROR.getKey(), "文件创建错误", null);
         }
         List<String> fieldsList = Collections.synchronizedList(new ArrayList<>());
         List<T> objectsList = Collections.synchronizedList(new ArrayList<T>());
@@ -170,6 +170,10 @@ public interface IExcelService<T> {
                     }
                     Field field = null;
                     try {
+                        if (null == fieldsList.get(i)) {
+                            i++;
+                            continue;
+                        }
                         field = obj.getClass().getDeclaredField(fieldsList.get(i));
                         field.setAccessible(true);
                         field.set(obj, getCellValue(cellIterator.next()));
@@ -181,12 +185,12 @@ public interface IExcelService<T> {
                 objectsList.add((T) obj);
             } catch (IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
-                return new AjaxResult(LycheeConstant.RESPONSE_ERROR_CODE, "对象解析创建错误", null);
+                return new AjaxResult(ResponseCodeEnum.ERROR.getKey(), "对象解析创建错误", null);
             }
 
 
         }
-        return new AjaxResult(LycheeConstant.RESPONSE_SUCCESS_CODE, null, objectsList);
+        return new AjaxResult(ResponseCodeEnum.ERROR.getKey(), null, objectsList);
     }
 
     /**
