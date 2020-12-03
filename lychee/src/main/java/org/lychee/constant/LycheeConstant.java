@@ -15,4 +15,5 @@ public class LycheeConstant {
      * captha:{deviceId}/{token}/{ip}
      */
     public static final String KEY_CAPTHA = "captha:";
+    public static final Integer RESPONSE_SUCCESS_CODE = 0;
 }

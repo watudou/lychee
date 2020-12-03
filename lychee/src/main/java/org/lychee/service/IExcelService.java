@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.lychee.enums.ResponseCodeEnum;
 import org.lychee.util.StringEnumUtil;
+import org.lychee.web.annotation.ColumnExportDate;
 import org.lychee.web.controller.AjaxResult;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,15 +78,18 @@ public interface IExcelService<T> {
     }
 
 
-    static String getCellValue(Cell cell) {
+    static String getCellValue(Cell cell,String formart) {
         if (cell.getCellType() == CellType.NUMERIC) {
-            if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                return sdf.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue())).toString();
-            } else {
-                DataFormatter dataFormatter = new DataFormatter();
-                return dataFormatter.formatCellValue(cell);
+            if(null!=formart){
+                if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+                    SimpleDateFormat sdf = new SimpleDateFormat(formart);
+                    return sdf.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue())).toString();
+                } else {
+                    DataFormatter dataFormatter = new DataFormatter();
+                    return dataFormatter.formatCellValue(cell);
+                }
             }
+            return  cell.getNumericCellValue()+"";
         } else if (cell.getCellType() == CellType.STRING) {
             return cell.getStringCellValue();
         } else if (cell.getCellType() == CellType.BOOLEAN) {
@@ -176,7 +180,7 @@ public interface IExcelService<T> {
                         }
                         field = obj.getClass().getDeclaredField(fieldsList.get(i));
                         field.setAccessible(true);
-                        field.set(obj, getCellValue(cellIterator.next()));
+                        field.set(obj, getCellValue(cellIterator.next(),null));
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     }
@@ -200,7 +204,7 @@ public interface IExcelService<T> {
      * @param enumClass 映射枚举
      * @param listData  数据
      */
-    default void exportExport(String sheetName, Class enumClass, List<T> listData, HttpServletResponse response) throws IOException, IllegalAccessException {
+    default void exportExcel(String sheetName, Class enumClass, List<T> listData, HttpServletResponse response) throws IOException, IllegalAccessException {
         HSSFWorkbook wb = new HSSFWorkbook();
         HSSFSheet sheet = wb.createSheet(sheetName);
         HSSFCellStyle cellStyle = wb.createCellStyle();
@@ -237,16 +241,21 @@ public interface IExcelService<T> {
                     fields[j].setAccessible(true);
                     if (fields[j].getName().equals(key)) {
                         value = fields[j].get(data);
+                        if(null!=value){
+                            ColumnExportDate anno =fields[j].getAnnotation(ColumnExportDate.class);
+                            if(null!=anno && StringUtils.isNotBlank(anno.value())){
+                                SimpleDateFormat sdf = new SimpleDateFormat(anno.value());
+                                value= sdf.format(new Date(Long.valueOf(value.toString())));
+                            }
+                        }else {
+                            value="";
+                        }
                     }
                     if ("id".equals(key)) {
                         value = rowNum;
                     }
                 }
-                if (value != null) {
-                    cell.setCellValue(value.toString());
-                } else {
-                    cell.setCellValue("");
-                }
+                cell.setCellValue(value.toString());
                 sheet.autoSizeColumn(colNum, true);
                 cell.setCellStyle(cellStyle);
                 row.setHeightInPoints(20);

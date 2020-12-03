@@ -4,8 +4,8 @@ import lombok.Data;
 
 /**
  * 文件信息
- *
- * @author yons
+ * @author lizhixiao
+ * @since 2020-08-12
  */
 @Data
 public class FileInfo {
@@ -14,10 +14,12 @@ public class FileInfo {
      * 文件名
      */
     private String name;
+
     /**
      * 文件大小
      */
     private Long size;
+
     /**
      * 文件名后缀
      */
