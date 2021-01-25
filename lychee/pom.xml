@@ -14,7 +14,7 @@
     <groupId>com.github.watudou</groupId>
     <artifactId>lychee</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <name>lychee</name>
     <url>http://maven.apache.org</url>
@@ -103,12 +103,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-       <!-- <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <scope>system</scope>
-            <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>com.sun</groupId>
+             <artifactId>tools</artifactId>
+             <scope>system</scope>
+             <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+         </dependency>-->
     </dependencies>
 
     <profiles>
@@ -217,5 +217,5 @@
             </distributionManagement>
         </profile>
     </profiles>
-    <!--  mvn clean deploy -X # -X可以查看详细信息-->
+    <!--  mvn clean deploy -P release #使用 -X  可以查看详细信息-->
 </project>
